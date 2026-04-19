@@ -90,10 +90,6 @@ document.getElementById('simForm').addEventListener('submit', function (e) {
     document.getElementById('rPrincipal').textContent = fmtMan(principal);
     document.getElementById('rGain').textContent      = fmtMan(gain);
 
-    // グラフ描画
-    drawDonut(principal, gain > 0 ? gain : 0);
-    drawLine(data);
-
     // シェアリンク
     const msg = `【貯蓄シミュレーター】${years}年後の貯蓄額は約${fmtMan(finalAmt)}万円！（元本${fmtMan(principal)}万円＋運用益${fmtMan(gain)}万円）`;
     const url = location.href;
@@ -102,9 +98,14 @@ document.getElementById('simForm').addEventListener('submit', function (e) {
     document.getElementById('shareLine').href =
         `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(url)}&text=${encodeURIComponent(msg)}`;
 
-    // 結果表示
+    // 結果エリアを先に表示してからグラフ描画（非表示中はoffsetWidth=0になるため）
     const result = document.getElementById('resultContainer');
     result.classList.remove('hidden');
+
+    // グラフ描画
+    drawDonut(principal, gain > 0 ? gain : 0);
+    drawLine(data);
+
     result.scrollIntoView({ behavior: 'smooth', block: 'start' });
 });
 
@@ -125,8 +126,8 @@ function drawDonut(principal, gain) {
 
     // 高解像度対応
     const dpr  = window.devicePixelRatio || 2;
-    const cssW = canvas.offsetWidth;
-    const cssH = canvas.offsetHeight;
+    const cssW = canvas.offsetWidth  || 160;
+    const cssH = canvas.offsetHeight || 160;
     canvas.width  = cssW * dpr;
     canvas.height = cssH * dpr;
     ctx.scale(dpr, dpr);
@@ -203,7 +204,7 @@ function drawLine(data) {
 
     // 高解像度対応
     const dpr  = window.devicePixelRatio || 2;
-    const cssW = canvas.offsetWidth;
+    const cssW = canvas.offsetWidth || 500;
     const cssH = 220;
     canvas.width  = cssW * dpr;
     canvas.height = cssH * dpr;
