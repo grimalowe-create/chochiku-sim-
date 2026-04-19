@@ -122,8 +122,17 @@ function fmtMan(v) {
 function drawDonut(principal, gain) {
     const canvas = document.getElementById('donutChart');
     const ctx    = canvas.getContext('2d');
-    const W = canvas.width;
-    const H = canvas.height;
+
+    // 高解像度対応
+    const dpr  = window.devicePixelRatio || 2;
+    const cssW = canvas.offsetWidth;
+    const cssH = canvas.offsetHeight;
+    canvas.width  = cssW * dpr;
+    canvas.height = cssH * dpr;
+    ctx.scale(dpr, dpr);
+
+    const W = cssW;
+    const H = cssH;
     ctx.clearRect(0, 0, W, H);
 
     const total = principal + gain;
@@ -192,10 +201,9 @@ function drawLine(data) {
     const canvas = document.getElementById('lineChart');
     const ctx    = canvas.getContext('2d');
 
-    // DPR対応
-    const dpr  = window.devicePixelRatio || 1;
-    const rect = canvas.parentElement.getBoundingClientRect();
-    const cssW = rect.width - 36; // padding考慮
+    // 高解像度対応
+    const dpr  = window.devicePixelRatio || 2;
+    const cssW = canvas.offsetWidth;
     const cssH = 220;
     canvas.width  = cssW * dpr;
     canvas.height = cssH * dpr;
